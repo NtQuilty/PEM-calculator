@@ -372,7 +372,7 @@ function App() {
                 }}
               >
                 <img
-                  src="public/installAnchor.png"
+                  src="/installAnchor.png"
                   alt="Схема установки"
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
