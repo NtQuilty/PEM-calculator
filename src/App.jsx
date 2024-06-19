@@ -1,6 +1,21 @@
 import "normalize.css";
 import { useEffect, useState } from "react";
 
+const installationQuality = [
+  {
+    title: "Отличное (почти без отходов)",
+    errorRate: 5,
+  },
+  {
+    title: "Обычное (стандартное количество отходов)",
+    errorRate: 15,
+  },
+  {
+    title: "Плохое (много отходов)",
+    errorRate: 25,
+  },
+];
+
 const sizeThreadedStud = [
   {
     studDiameter: 6,
@@ -110,28 +125,47 @@ function App() {
   const [studDiameter, setStudDiameter] = useState();
   const [drillDiameter, setDrillDiameter] = useState();
   const [cartridgeVolume, setCartridgeVolume] = useState();
+  const [quality, setQuality] = useState();
+  const [titleQuality, setTitleQuality] = useState();
+  const [isMobile, setIsMobile] = useState();
+  const [checkFilling, setCheckFilling] = useState(true);
+
+  //Phind. Не смотреть на этот useEffect (дизайн будет изменяться по любому)
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
-    if (quantityPoints && depth && studDiameter && cartridgeVolume) {
+    if (
+      titleQuality &&
+      quantityPoints &&
+      depth &&
+      studDiameter &&
+      cartridgeVolume
+    ) {
       setValidation(true);
     } else {
       setValidation(false);
       setCalculation(false);
     }
-  }, [quantityPoints, depth, studDiameter, cartridgeVolume]);
+  }, [titleQuality, quantityPoints, depth, studDiameter, cartridgeVolume]);
 
-  const result =
+  const expenditure =
     ((((drillDiameter + 0.4) / 2) ** 2 * Math.PI * depth) / 1000 / 3) *
     2 *
-    1.05;
-  const result2 = cartridgeVolume / result;
-  const result3 = (quantityPoints * result) / cartridgeVolume;
+    (1 + quality / 100);
+  const numberPoints = cartridgeVolume / expenditure;
+  const numberCartridges = (quantityPoints * expenditure) / cartridgeVolume;
 
   const handleChange = (e) => {
     const selectedValue = e.target.value;
     if (selectedValue === "") {
-      setValidation(false);
-      setCalculation(false);
+      setStudDiameter("");
     }
     const selectedStud = sizeThreadedStud.find(
       (stud) => stud.studDiameter.toString() === selectedValue
@@ -142,6 +176,24 @@ function App() {
         Object.values(selectedStud);
       setStudDiameter(foundStudDiameter);
       setDrillDiameter(foundDrillDiameter);
+    }
+  };
+
+  const findInstallationQuality = (e) => {
+    const selectedErrorRate = e.target.value;
+    if (selectedErrorRate === "") {
+      // setValidation(false);
+      // setCalculation(false);
+      setTitleQuality("");
+    }
+    const selectedQuality = installationQuality.find(
+      (quality) => quality.errorRate.toString() === selectedErrorRate
+    );
+
+    if (selectedQuality) {
+      const [title, errorRate] = Object.values(selectedQuality);
+      setTitleQuality(title);
+      setQuality(errorRate);
     }
   };
 
@@ -167,6 +219,39 @@ function App() {
             используемой шпильки, качества монтажа и других параметров.
           </p>
         </div>
+        {/* КАЧЕСТВО МОНТАЖА */}
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h2
+            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+          >
+            Качество монтажа
+          </h2>
+          <select
+            name="installationQuality"
+            style={{
+              maxWidth: "400px",
+              height: "30px",
+              padding: "4px 6px",
+              border:
+                checkFilling || quality
+                  ? "1px solid rgba(104, 104, 104, 0.5)"
+                  : "1px solid red",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "1rem",
+              color: "#686868",
+              outline: "none",
+            }}
+            onChange={findInstallationQuality}
+          >
+            <option value={""}>Требуемое качество</option>
+            {installationQuality.map(({ errorRate, title }, index) => (
+              <option key={index} value={errorRate}>
+                {title}
+              </option>
+            ))}
+          </select>
+        </div>
         {/* КОЛИЧЕСТВО ТОЧЕК */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
@@ -175,24 +260,21 @@ function App() {
             Количество точек
           </h2>
           <input
+            type="number"
+            min={0}
             style={{
               color: "#686868",
               width: "8rem",
               padding: "6px",
               background: "#d9d9d9",
-              border: "1px solid rgba(104, 104, 104, 0.5)",
+              border:
+                checkFilling || quantityPoints
+                  ? "1px solid rgba(104, 104, 104, 0.5)"
+                  : "1px solid red",
               borderRadius: "5px",
               boxSizing: "border-box",
               outline: "none",
             }}
-            onFocus={(e) =>
-              (e.target.style.boxShadow =
-                "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6)")
-            }
-            onBlur={(e) =>
-              (e.target.style.boxShadow =
-                "inset 0 1px 1px rgba(0, 0, 0, 0.075)")
-            }
             onChange={(e) => setQuantityPoints(e.target.value)}
           ></input>
         </div>
@@ -209,7 +291,10 @@ function App() {
               maxWidth: "400px",
               height: "30px",
               padding: "4px 6px",
-              border: "1px solid rgba(104, 104, 104, 0.5)",
+              border:
+                checkFilling || studDiameter
+                  ? "1px solid rgba(104, 104, 104, 0.5)"
+                  : "1px solid red",
               borderRadius: "5px",
               cursor: "pointer",
               fontSize: "1rem",
@@ -234,24 +319,21 @@ function App() {
             Глубина отверстия, мм
           </h2>
           <input
+            type="number"
+            min={0}
             style={{
               color: "#686868",
               width: "8rem",
               padding: "6px",
               background: "#d9d9d9",
-              border: "1px solid rgba(104, 104, 104, 0.5)",
+              border:
+                checkFilling || depth
+                  ? "1px solid rgba(104, 104, 104, 0.5)"
+                  : "1px solid red",
               borderRadius: "5px",
               boxSizing: "border-box",
               outline: "none",
             }}
-            onFocus={(e) =>
-              (e.target.style.boxShadow =
-                "inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6)")
-            }
-            onBlur={(e) =>
-              (e.target.style.boxShadow =
-                "inset 0 1px 1px rgba(0, 0, 0, 0.075)")
-            }
             onChange={(e) => setDepth(e.target.value)}
           ></input>
         </div>
@@ -268,7 +350,10 @@ function App() {
               maxWidth: "400px",
               height: "30px",
               padding: "4px 6px",
-              border: "1px solid rgba(104, 104, 104, 0.5)",
+              border:
+                checkFilling || cartridgeVolume
+                  ? "1px solid rgba(104, 104, 104, 0.5)"
+                  : "1px solid red",
               borderRadius: "5px",
               cursor: "pointer",
               fontSize: "1rem",
@@ -299,56 +384,108 @@ function App() {
               background: "#0057ff",
               opacity: validation ? "1" : "0.5",
             }}
-            onClick={() => (validation ? setCalculation(true) : "")}
+            onClick={() => {
+              if (validation) {
+                setCalculation(true);
+                setCheckFilling(false);
+              }
+              setCheckFilling(false);
+            }}
           >
             РАССЧИТАТЬ
           </button>
         </div>
         {calculation ? (
           <div>
-            <div>
-              <h3
+            <h3
+              style={{
+                fontWeight: "700",
+                fontSize: "1.5rem",
+                marginBottom: "10px",
+              }}
+            >
+              Расчёт расхода химических анкеров для полнотелых материалов
+            </h3>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div>
+                <p>
+                  Качество монтажа:
+                  <b> {titleQuality}</b>
+                </p>
+                <p>
+                  Количество точек: <b>{quantityPoints}</b>
+                </p>
+                <p>
+                  Диаметр шпильки: <b>M{studDiameter}</b>
+                </p>
+                <p>
+                  Глубина отверстия: <b>{depth} мм</b>
+                </p>
+                <p>
+                  Диаметр бура: <b>{drillDiameter} мм</b>
+                </p>
+
+                <p>
+                  Расход на одну точку: <b>{expenditure.toFixed(2)} мл</b>
+                </p>
+                <p>
+                  Количество точек на 1 картридж:{" "}
+                  <b>{numberPoints.toFixed(2)}</b>
+                </p>
+                <p>
+                  Количество картриджей: <b>{Math.ceil(numberCartridges)}</b>
+                </p>
+              </div>
+              <div
                 style={{
-                  fontWeight: "700",
-                  fontSize: "1.5rem",
-                  margin: "1.5rem 0",
+                  display: "flex",
+                  alignItems: "center",
+                  margin: "0 30px 0 auto",
+                  position: isMobile ? "absolute" : "inherit",
+                  right: "-10px",
                 }}
               >
-                Расчёт расхода химических анкеров для полнотелых материалов
-              </h3>
-              <p>
-                Качество монтажа:
-                <b> Отличное (почти без отходов)</b>
-              </p>
-              <p>
-                Количество точек: <b>{quantityPoints}</b>
-              </p>
-              <p>
-                Диаметр шпильки: <b>M{studDiameter}</b>
-              </p>
-              <p>
-                Глубина отверстия: <b>{depth} мм</b>
-              </p>
-              <p>
-                Диаметр бура: <b>{drillDiameter} мм</b>
-              </p>
-
-              <p>
-                Расход на одну точку: <b>{result.toFixed(2)} мл</b>
-              </p>
-              <p>
-                Количество точек на 1 баллон: <b>{result2.toFixed(2)}</b>
-              </p>
-              <p>
-                Количество баллонов: <b>{result3.toFixed(0)}</b>
-              </p>
+                <a
+                  href="https://t.me/nrgmru"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="/telegram.png"
+                    alt="Помощник с вопросом"
+                    style={{ maxWidth: "100px" }}
+                  />
+                </a>
+                {/* <p style={{ margin: "0", color: "#27a7e7" }}>
+                  Помогу с выбором
+                </p> */}
+              </div>
             </div>
+            {/* <div
+              style={{
+                display: isMobile ? "flex" : "flex",
+                justifyContent: "center",
+                background: "#27a7e7",
+                color: "white",
+                maxWidth: "200px",
+              }}
+            >
+              <a
+                href="https://t.me/nrgmru"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none", color: "white" }}
+              >
+                Помогу с выбором
+              </a>
+            </div> */}
             <div
               style={{
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 border: "1px solid black",
+                marginTop: "16px",
               }}
             >
               <div
