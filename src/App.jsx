@@ -120,17 +120,16 @@ const Cartridge = [
 function App() {
   const [validation, setValidation] = useState(false);
   const [calculation, setCalculation] = useState(false);
-  const [depth, setDepth] = useState();
-  const [quantityPoints, setQuantityPoints] = useState();
-  const [studDiameter, setStudDiameter] = useState();
-  const [drillDiameter, setDrillDiameter] = useState();
-  const [cartridgeVolume, setCartridgeVolume] = useState();
-  const [quality, setQuality] = useState();
-  const [titleQuality, setTitleQuality] = useState();
+  const [depth, setDepth] = useState("");
+  const [quantityPoints, setQuantityPoints] = useState("");
+  const [studDiameter, setStudDiameter] = useState("");
+  const [drillDiameter, setDrillDiameter] = useState("");
+  const [cartridgeVolume, setCartridgeVolume] = useState("");
+  const [quality, setQuality] = useState("");
+  const [titleQuality, setTitleQuality] = useState("");
   const [isMobile, setIsMobile] = useState();
   const [checkFilling, setCheckFilling] = useState(true);
 
-  //Phind. Не смотреть на этот useEffect (дизайн будет изменяться по любому)
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -162,8 +161,9 @@ function App() {
   const numberPoints = cartridgeVolume / expenditure;
   const numberCartridges = (quantityPoints * expenditure) / cartridgeVolume;
 
-  const handleChange = (e) => {
+  const handleStudDiameterChange = (e) => {
     const selectedValue = e.target.value;
+
     if (selectedValue === "") {
       setStudDiameter("");
     }
@@ -172,20 +172,18 @@ function App() {
     );
 
     if (selectedStud) {
-      const [foundStudDiameter, foundDrillDiameter] =
-        Object.values(selectedStud);
-      setStudDiameter(foundStudDiameter);
-      setDrillDiameter(foundDrillDiameter);
+      const [studDiameter, drillDiameter] = Object.values(selectedStud);
+      setStudDiameter(studDiameter);
+      setDrillDiameter(drillDiameter);
     }
   };
 
   const findInstallationQuality = (e) => {
     const selectedErrorRate = e.target.value;
     if (selectedErrorRate === "") {
-      // setValidation(false);
-      // setCalculation(false);
       setTitleQuality("");
     }
+
     const selectedQuality = installationQuality.find(
       (quality) => quality.errorRate.toString() === selectedErrorRate
     );
@@ -301,7 +299,7 @@ function App() {
               color: "#686868",
               outline: "none",
             }}
-            onChange={handleChange}
+            onChange={handleStudDiameterChange}
           >
             <option value={""}>Выберите размер</option>
             {sizeThreadedStud.map(({ studDiameter }, index) => (
@@ -456,29 +454,8 @@ function App() {
                     style={{ maxWidth: "100px" }}
                   />
                 </a>
-                {/* <p style={{ margin: "0", color: "#27a7e7" }}>
-                  Помогу с выбором
-                </p> */}
               </div>
             </div>
-            {/* <div
-              style={{
-                display: isMobile ? "flex" : "flex",
-                justifyContent: "center",
-                background: "#27a7e7",
-                color: "white",
-                maxWidth: "200px",
-              }}
-            >
-              <a
-                href="https://t.me/nrgmru"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ textDecoration: "none", color: "white" }}
-              >
-                Помогу с выбором
-              </a>
-            </div> */}
             <div
               style={{
                 display: "flex",
