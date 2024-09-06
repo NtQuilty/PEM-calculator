@@ -42,12 +42,28 @@ const sizeThreadedStud = [
     drillDiameter: 18,
   },
   {
+    studDiameter: 18,
+    drillDiameter: 22,
+  },
+  {
     studDiameter: 20,
     drillDiameter: 24,
   },
   {
+    studDiameter: 22,
+    drillDiameter: 26,
+  },
+  {
     studDiameter: 24,
     drillDiameter: 28,
+  },
+  {
+    studDiameter: 25,
+    drillDiameter: 29,
+  },
+  {
+    studDiameter: 26,
+    drillDiameter: 30,
   },
   {
     studDiameter: 27,
@@ -56,6 +72,10 @@ const sizeThreadedStud = [
   {
     studDiameter: 30,
     drillDiameter: 35,
+  },
+  {
+    studDiameter: 32,
+    drillDiameter: 36,
   },
   {
     studDiameter: 36,
@@ -74,6 +94,10 @@ const sizeThreadedStud = [
     drillDiameter: 46,
   },
   {
+    studDiameter: 44,
+    drillDiameter: 48,
+  },
+  {
     studDiameter: 46,
     drillDiameter: 50,
   },
@@ -90,12 +114,20 @@ const sizeThreadedStud = [
     drillDiameter: 56,
   },
   {
+    studDiameter: 54,
+    drillDiameter: 58,
+  },
+  {
     studDiameter: 60,
     drillDiameter: 64,
   },
   {
     studDiameter: 62,
     drillDiameter: 66,
+  },
+  {
+    studDiameter: 64,
+    drillDiameter: 68,
   },
 ];
 
@@ -209,9 +241,6 @@ function App() {
         <div
           style={{ display: "flex", flexDirection: "column", color: "#002421" }}
         >
-          <h1 style={{ fontWeight: "700", fontSize: "2rem" }}>
-            Калькулятор расхода химических анкеров
-          </h1>
           <p style={{ fontWeight: "400", fontSize: "1rem" }}>
             Расход для полнотелых и пустотелых материалов в зависимости от
             используемой шпильки, качества монтажа и других параметров.
@@ -220,7 +249,12 @@ function App() {
         {/* КАЧЕСТВО МОНТАЖА */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
-            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+            style={{
+              fontWeight: "700",
+              fontSize: "1.5rem",
+              color: "#686868",
+              margin: "20px 0",
+            }}
           >
             Качество монтажа
           </h2>
@@ -253,7 +287,12 @@ function App() {
         {/* КОЛИЧЕСТВО ТОЧЕК */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
-            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+            style={{
+              fontWeight: "700",
+              fontSize: "1.5rem",
+              color: "#686868",
+              margin: "20px 0",
+            }}
           >
             Количество точек
           </h2>
@@ -279,7 +318,12 @@ function App() {
         {/* РЕЗЬБОВАЯ ШПИЛЬКА */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
-            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+            style={{
+              fontWeight: "700",
+              fontSize: "1.5rem",
+              color: "#686868",
+              margin: "20px 0",
+            }}
           >
             Резьбовая шпилька
           </h2>
@@ -312,7 +356,12 @@ function App() {
         {/* ГЛУБИНА ОТВЕРСТИЯ */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
-            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+            style={{
+              fontWeight: "700",
+              fontSize: "1.5rem",
+              color: "#686868",
+              margin: "20px 0",
+            }}
           >
             Глубина отверстия, мм
           </h2>
@@ -338,7 +387,12 @@ function App() {
         {/* КАРТРИДЖ */}
         <div style={{ display: "flex", flexDirection: "column" }}>
           <h2
-            style={{ fontWeight: "700", fontSize: "1.5rem", color: "#686868" }}
+            style={{
+              fontWeight: "700",
+              fontSize: "1.5rem",
+              color: "#686868",
+              margin: "20px 0",
+            }}
           >
             Картридж
           </h2>
@@ -449,7 +503,7 @@ function App() {
                   rel="noopener noreferrer"
                 >
                   <img
-                    src="/telegram.png"
+                    src="https://static.insales-cdn.com/files/1/6371/35461347/original/telegram.png"
                     alt="Помощник с вопросом"
                     style={{ maxWidth: "100px" }}
                   />
@@ -486,7 +540,7 @@ function App() {
                 }}
               >
                 <img
-                  src="/installAnchor.png"
+                  src="https://static.insales-cdn.com/files/1/2669/35400301/original/installAnchor.png"
                   alt="Схема установки"
                   style={{ maxWidth: "100%", height: "auto" }}
                 />
